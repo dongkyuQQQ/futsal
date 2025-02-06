@@ -1,0 +1,53 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Order {
+  id              String   @id @default(cuid())
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // 제품 정보
+  width           Float
+  length          Float
+  area            Float
+  grassType       String
+  totalPrice      Float
+
+  // 구매자 정보
+  businessName    String
+  fieldName       String
+  address         String
+  installationDate DateTime
+  paymentType     String
+  installmentMonths Int?
+
+  // 견적 상세
+  materials      MaterialDetails?
+}
+
+model MaterialDetails {
+  id          String @id @default(cuid())
+  orderId     String @unique
+  order       Order  @relation(fields: [orderId], references: [id])
+
+  grassAmount Float
+  grassPrice  Float
+  sandAmount  Float
+  sandPrice   Float
+  rubberAmount Float
+  rubberPrice Float
+  tapeAmount  Float
+  tapePrice   Float
+  glueAmount  Float
+  gluePrice   Float
+  installationPrice Float
+  miscPrice   Float
+  subtotal    Float
+  vat         Float
+} 
